@@ -3,13 +3,21 @@
   "version": "1.0.0",
   "description": "Simple redis-based Queue and scalable Workers",
   "main": "index.js",
+  "devDependencies": {
+    "redis": "^2.8.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slavahatnuke/plus.queue.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "redis": "^2.8.0"
-  }
+  "bugs": {
+    "url": "https://github.com/slavahatnuke/plus.queue/issues"
+  },
+  "homepage": "https://github.com/slavahatnuke/plus.queue#readme"
 }
