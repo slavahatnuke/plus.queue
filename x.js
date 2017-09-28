@@ -6,7 +6,7 @@ const {queue, job, worker, queueFactory} = require('./index');
 const redisClient = redis.createClient({
   host: 'redis-12345.c9.us-east-1-2.ec2.cloud.redislabs.com',
   port: 14120,
-  password: 'passs'
+  password: 'pass'
 });
 
 const testQueue = queue(redisClient, 'test', {prefix: 'queue:custom-prefix:'});

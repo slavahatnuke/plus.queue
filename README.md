@@ -13,7 +13,11 @@ const redisClient = redis.createClient({
   password: 'YourPassHere'
 });
 
-const testQueue = queue(redisClient, 'test', {prefix: 'queue:custom-prefix:'});
+const testQueue = queue(redisClient, 'test', {
+  prefix: 'queue:custom-prefix:', // // optional
+  encrypt: (data) => data, // optional
+  decrypt: (data) => data // optional
+});
 
 testQueue.add(1)
 testQueue.add(2)
@@ -74,10 +78,17 @@ const redisClient = redis.createClient({
   password: 'passs'
 });
 
-const testQueueFactory = queueFactory(redisClient, {prefix: 'queue:custom-prefix:'});
-const testQueue = testFactory(redisClient, 'test');
+const testQueueFactory = queueFactory(redisClient, {
+  prefix: 'queue:custom-prefix:', // // optional
+  encrypt: (data) => data, // optional
+  decrypt: (data) => data // optional
+});
+
+const testQueue = testQueueFactory(redisClient, 'test');
 
 testQueue.add({xxx: 1})
+  .then(() =>  testQueue.get())
+  
 // ....
 
 ```

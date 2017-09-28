@@ -3,7 +3,9 @@ const Job = require('./Job');
 module.exports = class Queue {
   constructor(redis, name = 'default', options = {}) {
     this.options = Object.assign({
-      prefix: 'queue:'
+      prefix: 'queue:',
+      encrypt: (data) => data,
+      decrypt: (data) => data
     }, options);
 
     this.name = this.options.prefix + name;
@@ -29,8 +31,9 @@ module.exports = class Queue {
         }
 
         return job.makeId()
-          .then(() => {
-            return new Promise((resolve, reject) => this.redis.rpush(this.name, JSON.stringify(job), (err, result) => {
+          .then(() => this.options.encrypt(JSON.stringify(job)))
+          .then((textData) => {
+            return new Promise((resolve, reject) => this.redis.rpush(this.name, textData, (err, result) => {
               return err ? reject(err) : resolve(result);
             }))
               .then(() => job);
@@ -40,7 +43,7 @@ module.exports = class Queue {
 
   get() {
     return this.getJob().then((job) => {
-      if(job) {
+      if (job) {
         return job.raw ? job.getData() : job
       } else {
         return null;
@@ -54,21 +57,21 @@ module.exports = class Queue {
         if (err) {
           return reject(err);
         }
-
-        let data;
-        try {
-          data = JSON.parse(result);
-        } catch (error) {
-          return reject(error);
-        }
-
-        if (!data) {
-          return resolve(null);
-        }
-
-        return resolve(new Job(data.data, data.id, data.raw));
+        resolve(result)
       });
     })
+      .then((result) => {
+        if (!result) {
+          return null;
+        }
+
+        return Promise.resolve()
+          .then(() => this.options.decrypt(result))
+          .then((result) => {
+            let data = JSON.parse(result);
+            return new Job(data.data, data.id, data.raw);
+          })
+      })
   }
 
 };
