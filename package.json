@@ -1,6 +1,6 @@
 {
   "name": "plus.queue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple redis-based Queue and scalable Workers",
   "main": "index.js",
   "devDependencies": {

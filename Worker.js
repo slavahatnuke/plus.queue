@@ -53,7 +53,7 @@ module.exports = class Worker {
   }
 
   _ask() {
-    console.log('_ask', Math.random().toString(35).slice(3, 15));
+    // console.log('_ask', Math.random().toString(35).slice(3, 15));
 
     if (this.isQuit) {
       this.eventEmitter.emit('job.finished', {job: null});
