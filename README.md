@@ -5,7 +5,7 @@ Simple redis-based Queue and scalable Workers
 ```javascript
 const redis = require('redis');
 
-const {queue, job, worker, queueFactory} = require('./index');
+const {queue, job, worker, queueFactory} = require('plus.queue');
 
 const redisClient = redis.createClient({
   host: 'redis-12345.c9.us-east-1-2.ec2.cloud.redislabs.com',
