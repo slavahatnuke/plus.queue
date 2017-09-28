@@ -1,0 +1,15 @@
+{
+  "name": "plus.queue",
+  "version": "1.0.0",
+  "description": "Simple redis-based Queue and scalable Workers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "redis": "^2.8.0"
+  }
+}
