@@ -34,6 +34,8 @@ testQueue.add(3)
 testQueue.add(4)
 testQueue.add(5)
 
+testQueue.add([6, 7, 8])
+
 const testWorker = worker(testQueue, (data, job, queue) => {
   console.log(data);
 
