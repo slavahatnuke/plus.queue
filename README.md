@@ -27,6 +27,8 @@ testQueue.add(3)
 testQueue.add(4)
 testQueue.add(5)
 
+testQueue.add([6, 7, 8])
+
 const testWorker = worker(testQueue, (data, job, queue) => {
   console.log(data);
 
@@ -45,7 +47,10 @@ const testWorker = worker(testQueue, (data, job, queue) => {
 // 3
 // 4
 // 5
-
+// 6 
+// 7
+// 8
+ 
 testWorker.subscribe((data, job, queue) => {
   // console.log('onSuccess', {data, job, queue})
   console.log('onSuccess', {data})
