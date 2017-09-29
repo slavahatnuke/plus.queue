@@ -4,8 +4,10 @@ module.exports = class Queue {
   constructor(redis, name = 'default', options = {}) {
     this.options = Object.assign({
       prefix: 'queue:',
+      encrypt: (data) => data,
+      decrypt: (data) => data,
       mapper: (data) => data,
-      demapper: (data) => data
+      demapper: (data) => data,
     }, options);
 
     this.name = this.options.prefix + name;
@@ -31,7 +33,9 @@ module.exports = class Queue {
         }
 
         return job.makeId()
-          .then(() => this.options.mapper(JSON.stringify(job)))
+          .then(() => this.options.mapper(job.getData()))
+          .then((data) => job.setData(data))
+          .then(() => this.options.encrypt(JSON.stringify(job)))
           .then((textData) => {
             return new Promise((resolve, reject) => this.redis.rpush(this.name, textData, (err, result) => {
               return err ? reject(err) : resolve(result);
@@ -66,10 +70,16 @@ module.exports = class Queue {
         }
 
         return Promise.resolve()
-          .then(() => this.options.demapper(result))
+          .then(() => this.options.decrypt(result))
           .then((result) => {
             let data = JSON.parse(result);
             return new Job(data.data, data.id, data.raw);
+          })
+          .then((job) => {
+            return Promise.resolve()
+              .then(() => this.options.demapper(job.getData()))
+              .then((data) => job.setData(data))
+              .then(() => job)
           })
       })
   }

@@ -15,6 +15,8 @@ const redisClient = redis.createClient({
 
 const testQueue = queue(redisClient, 'test', {
   prefix: 'queue:custom-prefix:', // // optional
+  encrypt: (data) => data, // optional
+  decrypt: (data) => data, // optional
   mapper: (data) => data, // optional
   demapper: (data) => data // optional
 });
@@ -80,8 +82,8 @@ const redisClient = redis.createClient({
 
 const testQueueFactory = queueFactory(redisClient, {
   prefix: 'queue:custom-prefix:', // // optional
-  mapper: (data) => data, // optional
-  demapper: (data) => data // optional
+  encrypt: (data) => data, // optional
+  decrypt: (data) => data // optional
 });
 
 const testQueue = testQueueFactory(redisClient, 'test');

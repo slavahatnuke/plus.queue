@@ -11,6 +11,10 @@ module.exports = class Job {
     return this.data;
   }
 
+  setData(data) {
+    this.data = data;
+  }
+
   getId() {
     return this.id;
   }
