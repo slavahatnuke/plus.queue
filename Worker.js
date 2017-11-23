@@ -75,7 +75,7 @@ module.exports = class Worker {
             }
 
             return Promise.resolve()
-              .then(() => this.handler(job.getData(), job, this.queue))
+              .then(() => this.handler(job.getData(), {job: job, queue: this.queue}))
               .then((result) => this.eventEmitter.emit('job.result', {job, result}))
               .catch((error) => {
                 // console.log({error})
@@ -89,7 +89,7 @@ module.exports = class Worker {
   }
 
   subscribe(onSuccess = () => null, onError = () => null) {
-    this.eventEmitter.on('job.result', ({job, result}) => onSuccess(result, job, this.queue));
-    this.eventEmitter.on('job.error', ({job, error}) => onError(error, job.getData(), job, this.queue));
+    this.eventEmitter.on('job.result', ({job, result}) => onSuccess(result, {job: job, queue: this.queue}));
+    this.eventEmitter.on('job.error', ({job, error}) => onError(error, job.getData(), {job: job, queue: this.queue}));
   }
 };

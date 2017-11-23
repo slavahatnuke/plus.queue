@@ -29,6 +29,10 @@ testQueue.add(5)
 
 testQueue.add([6, 7, 8])
 
+testQueue.put(10)
+testQueue.put(11)
+testQueue.put(12)
+
 const testWorker = worker(testQueue, (data, job, queue) => {
   console.log(data);
 
@@ -37,7 +41,7 @@ const testWorker = worker(testQueue, (data, job, queue) => {
     myCsutomDataForSubscriber: job.getData()
   };
 }, {
-  scale: 2, // quantity of handler, parallel
+  scale: 1, // quantity of handler, parallel
   interval: 1000, // ask interval in ms
 });
 
@@ -50,18 +54,21 @@ const testWorker = worker(testQueue, (data, job, queue) => {
 // 6 
 // 7
 // 8
+// 10
+// 11
+// 12
  
-testWorker.subscribe((data, job, queue) => {
+testWorker.subscribe((data, {job, queue}) => {
   // console.log('onSuccess', {data, job, queue})
   console.log('onSuccess', {data})
-}, (error, data, job, queue) => {
+}, (error, data, {job, queue}) => {
   // console.log('onError', {error, data, job, queue})
   console.log('onError', {error})
 });
 
 testWorker.start();
 
-setTimeout(() => testWorker.stop(), 10000)
+setTimeout(() => testWorker.stop().then(() => process.exit(0)), 10000)
 
 ```
 

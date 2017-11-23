@@ -34,17 +34,24 @@ testQueue.add(3)
 testQueue.add(4)
 testQueue.add(5)
 
+testQueue.put(10)
+testQueue.put(11)
+testQueue.put(12)
+
 testQueue.add([6, 7, 8])
 
-const testWorker = worker(testQueue, (data, job, queue) => {
-  console.log(data);
+const testWorker = worker(testQueue, (data, {job, queue}) => {
+  // console.log(data);
+  // console.log('>>>> 2 >>>>', {job, queue});
+
+  // throw new Error('Foo');
 
   return {
-    myCsutomInfoForSubscriber: job.getId(),
-    myCsutomDataForSubscriber: job.getData()
+    __id: job.getId(),
+    __data: job.getData()
   };
 }, {
-  scale: 2, // quantity of handler, parallel
+  scale: 1, // quantity of handler, parallel
   interval: 1000, // ask interval in ms
 });
 
@@ -55,16 +62,16 @@ const testWorker = worker(testQueue, (data, job, queue) => {
 // 4
 // 5
 
-testWorker.subscribe((data, job, queue) => {
-  // console.log('onSuccess', {data, job, queue})
+testWorker.subscribe((data, {job, queue}) => {
+  // console.log('onSuccess >>>> 1 >>>>', {data, job, queue})
   console.log('onSuccess', {data})
-}, (error, data, job, queue) => {
+}, (error, data, {job, queue}) => {
   // console.log('onError', {error, data, job, queue})
-  console.log('onError', {error})
+  console.log('onError', {error, data, job, queue})
 });
 
 testWorker.start();
 
-// setTimeout(() => testWorker.stop(), 3000)
+setTimeout(() => testWorker.stop().then(() => process.exit(0)), 3000)
 
 

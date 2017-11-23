@@ -27,9 +27,13 @@ module.exports = class Queue {
 
   add(job) {
     if (Array.isArray(job)) {
-      return Promise.all(job.map((job) => this.add(job)))
+      return Promise.all(job.map((job) => this.put(job)))
     }
 
+    return this.put(job);
+  }
+
+  put(job) {
     return Promise.resolve()
       .then(() => {
         if (!(job instanceof Job)) {
