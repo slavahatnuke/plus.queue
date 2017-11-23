@@ -12,6 +12,7 @@ module.exports = class Workers {
     }, options);
 
     this.workers = [];
+    this.subscribers = [];
   }
 
   start() {
@@ -26,17 +27,23 @@ module.exports = class Workers {
   }
 
   subscribe(onSuccess = () => null, onError = () => null) {
-    return this._makeWorkers()
-      .then(() => this.workers.forEach((worker) => worker.subscribe(onSuccess, onError)));
+    return Promise.resolve()
+      .then(() => {
+        this.subscribers.push([onSuccess, onError]);
+      })
   }
 
   _makeWorkers() {
     return Promise.resolve()
       .then(() => {
-        if(this.workers.length !== this.options.scale) {
+        if (this.workers.length !== this.options.scale) {
           return Array(this.options.scale).fill(0).map(() => {
             return new Worker(this.queue, this.handler, this.options);
           })
+            .map((worker) => {
+              this.subscribers.forEach(([onSuccess, onError]) => worker.subscribe(onSuccess, onError));
+              return worker;
+            })
         } else {
           return this.workers;
         }
