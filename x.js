@@ -1,6 +1,6 @@
 const redis = require('redis');
 
-const {queue, job, worker, queueFactory, workerFactory} = require('./index');
+const {Queue, Job, Worker, QueueFactory, WorkerFactory} = require('./index');
 
 
 const redisClient = redis.createClient({
@@ -8,7 +8,7 @@ const redisClient = redis.createClient({
   port: 6379
 });
 
-const testQueue = queue(redisClient, 'test', {
+const testQueue = Queue(redisClient, 'test', {
   prefix: 'queue:custom-prefix:',
   // demapper: (data) => data + 1000
 });
@@ -40,7 +40,7 @@ testQueue.put(12)
 
 testQueue.add([6, 7, 8])
 
-const testWorker = workerFactory({interval: 1000, scale: 100})(testQueue, (data, {job, queue}) => {
+const testWorker = WorkerFactory({interval: 1000, scale: 100})(testQueue, (data, {job, queue}) => {
   // console.log(data);
   // console.log('>>>> 2 >>>>', {job, queue});
 
@@ -64,7 +64,7 @@ testWorker.subscribe((data, {job, queue}) => {
   console.log('onSuccess', {data})
 }, (error, data, {job, queue}) => {
   // console.log('onError', {error, data, job, queue})
-  console.log('onError', {error, data, job, queue})
+  console.log('onError', {error, data, job, Queue})
 });
 
 testWorker.start();

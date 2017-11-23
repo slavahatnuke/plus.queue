@@ -3,11 +3,11 @@ const Queue = require('./Queue');
 const Job = require('./Job');
 
 const components = {
-  job: (data, id) => new Job(data, id),
-  queue: (redis, name, options = {}) => new Queue(redis, name, options),
-  queueFactory: (redis, options = {}) => (name, specificOptions = {}) => components.queue(redis, name, Object.assign({}, options, specificOptions)),
-  worker: (queue, handler = null , options = {}) => new Workers(queue, handler, options),
-  workerFactory: (options = {}) => (queue, handler = null, specificOptions = {}) => components.worker(queue, handler, Object.assign({}, options, specificOptions)),
+  Job: (data, id) => new Job(data, id),
+  Queue: (redis, name, options = {}) => new Queue(redis, name, options),
+  QueueFactory: (redis, options = {}) => (name, specificOptions = {}) => components.Queue(redis, name, Object.assign({}, options, specificOptions)),
+  Worker: (queue, handler = null , options = {}) => new Workers(queue, handler, options),
+  WorkerFactory: (options = {}) => (queue, handler = null, specificOptions = {}) => components.Worker(queue, handler, Object.assign({}, options, specificOptions)),
 };
 
 module.exports = components;

@@ -5,7 +5,7 @@ Simple redis-based Queue and scalable Workers
 ```javascript
 const redis = require('redis');
 
-const {queue, job, worker, queueFactory} = require('plus.queue');
+const {Queue, Worker, QueueFactory} = require('plus.queue');
 
 const redisClient = redis.createClient({
   host: 'redis-12345.c9.us-east-1-2.ec2.cloud.redislabs.com',
@@ -13,7 +13,7 @@ const redisClient = redis.createClient({
   password: 'YourPassHere'
 });
 
-const testQueue = queue(redisClient, 'test', {
+const testQueue = Queue(redisClient, 'test', {
   prefix: 'queue:custom-prefix:', // // optional
   encrypt: (data) => data, // optional
   decrypt: (data) => data, // optional
@@ -33,7 +33,7 @@ testQueue.put(10)
 testQueue.put(11)
 testQueue.put(12)
 
-const testWorker = worker(testQueue, (data, job, queue) => {
+const testWorker = Worker(testQueue, (data, {job, queue}) => {
   console.log(data);
 
   return {
@@ -92,7 +92,7 @@ const redisClient = redis.createClient({
   password: 'passs'
 });
 
-const testQueueFactory = queueFactory(redisClient, {
+const testQueueFactory = QueueFactory(redisClient, {
   prefix: 'queue:custom-prefix:', // // optional
   encrypt: (data) => data, // optional
   decrypt: (data) => data // optional
