@@ -7,7 +7,8 @@ module.exports = class Workers {
     this.handler = handler;
 
     this.options = Object.assign({
-      scale: 1
+      scale: 1,
+      interval: 500
     }, options);
 
     this.workers = [];

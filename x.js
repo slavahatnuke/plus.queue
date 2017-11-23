@@ -1,6 +1,6 @@
 const redis = require('redis');
 
-const {queue, job, worker, queueFactory} = require('./index');
+const {queue, job, worker, queueFactory, workerFactory} = require('./index');
 
 
 const redisClient = redis.createClient({
@@ -40,7 +40,7 @@ testQueue.put(12)
 
 testQueue.add([6, 7, 8])
 
-const testWorker = worker(testQueue, (data, {job, queue}) => {
+const testWorker = workerFactory({interval: 1000, scale: 100})(testQueue, (data, {job, queue}) => {
   // console.log(data);
   // console.log('>>>> 2 >>>>', {job, queue});
 
@@ -50,9 +50,6 @@ const testWorker = worker(testQueue, (data, {job, queue}) => {
     __id: job.getId(),
     __data: job.getData()
   };
-}, {
-  scale: 1, // quantity of handler, parallel
-  interval: 1000, // ask interval in ms
 });
 
 // prints
